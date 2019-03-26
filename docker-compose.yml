@@ -3,13 +3,25 @@ version: '3'
 services:
   gateway:
     image: ramsgoli/gateway
+    depends_on:
+      - thegoonlagoon-gateway
+    ports:
+      - "80:80"
+      - "443:443"
   database:
     image: postgres
     volumes:
       - postgres-data:/var/lib/postgresql/data:rw
+    env_file: database.env
+  thegoonlagoon-gateway:
+    image: ramsgoli/thegoonlagoon-gateway
+    depends_on:
+      - thegoonlagoon-app
   thegoonlagoon-app:
     image: ramsgoli/thegoonlagoon-app
-    env_file: .env
+    env_file: thegoonlagoon.env
+    depends_on:
+      - database
 
 volumes:
   postgres-data:
